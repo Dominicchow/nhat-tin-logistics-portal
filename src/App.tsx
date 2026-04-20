@@ -5,10 +5,6 @@ import illustration from './assets/illustration.png';
 import logo from './assets/logo-official.svg';
 
 function App() {
-  const handleConnect = () => {
-    // Trỏ thẳng về địa chỉ xác thực của Aruba theo yêu cầu
-    window.location.href = 'https://portal-embed.arubainstanton.com/cgi-bin/login?cmd=authenticate';
-  };
 
   return (
     <div className="portal-wrapper">
@@ -47,9 +43,16 @@ function App() {
           Chào mừng bạn đến với mạng Wi-Fi Nhất Tín Logistics
         </p>
 
-        <button className="connect-button" onClick={handleConnect}>
-          Kết nối Internet
-        </button>
+        <form 
+          method="POST" 
+          action="http://connectivitycheck.gstatic.com/generate_204"
+          style={{ width: '100%' }}
+        >
+          <input type="hidden" name="accept" value="true" />
+          <button type="submit" className="connect-button">
+            Kết nối Internet
+          </button>
+        </form>
       </motion.div>
 
       <motion.div 
