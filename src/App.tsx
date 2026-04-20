@@ -5,19 +5,6 @@ import illustration from './assets/illustration.png';
 import logo from './assets/logo-official.svg';
 
 function App() {
-  const handleConnect = () => {
-    // Lấy tham số 'u' từ URL
-    const params = new URLSearchParams(window.location.search);
-    const u = params.get('u');
-
-    if (u) {
-      // Nếu có u, gửi về u (Ưu tiên số 1)
-      window.location.href = u + (u.includes('?') ? '&' : '?') + 'accept=true';
-    } else {
-      // Nếu không có u, gửi về IP xác thực nội bộ của Aruba
-      window.location.href = "http://1.1.1.1/cgi-bin/login?cmd=authenticate&accept=true";
-    }
-  };
 
   return (
     <div className="portal-wrapper">
@@ -56,9 +43,10 @@ function App() {
           Chào mừng bạn đến với mạng Wi-Fi Nhất Tín Logistics
         </p>
 
-        <button type="button" className="connect-button" onClick={handleConnect}>
-          Kết nối Wi-Fi
-        </button>
+        <a href="http://1.1.1.1/cgi-bin/login?cmd=authenticate&accept=true" 
+           style={{ display: 'block', width: '100%', padding: '15px', background: '#e31a1a', color: 'white', textAlign: 'center', textDecoration: 'none', borderRadius: '10px', fontWeight: 'bold' }}>
+            Kết nối Wi-Fi
+        </a>
       </motion.div>
 
       <motion.div 
