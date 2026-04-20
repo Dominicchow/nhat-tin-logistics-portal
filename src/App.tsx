@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Wifi } from 'lucide-react';
 import './index.css';
@@ -5,19 +6,13 @@ import illustration from './assets/illustration.png';
 import logo from './assets/logo-official.svg';
 
 function App() {
+  const [isConnecting, setIsConnecting] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const loginAruba = () => {
-    const params = new URLSearchParams(window.location.search);
-    const u = params.get('u');
-    const form = document.getElementById('aruba-login-form') as HTMLFormElement;
-    const urlInput = document.getElementById('original-url') as HTMLInputElement;
-
-    if (u && urlInput) {
-      urlInput.value = u;
-    }
-    
-    if (form) {
-      form.submit();
+    setIsConnecting(true);
+    if (formRef.current) {
+      formRef.current.submit();
     }
   };
 
@@ -61,22 +56,34 @@ function App() {
         <form 
           id="aruba-login-form" 
           method="POST" 
-          action="http://securelogin.arubanetworks.com/cgi-bin/login" 
+          action="https://securelogin.arubanetworks.com/cgi-bin/login" 
           style={{ width: '100%' }}
+          ref={formRef}
         >
           <input type="hidden" name="user" value="guest" />
           <input type="hidden" name="password" value="guest" />
           <input type="hidden" name="cmd" value="authenticate" />
-          <input type="hidden" name="url" id="original-url" value="" />
+          <input type="hidden" name="url" value="https://google.com" />
 
           <button 
             type="button" 
             id="btn-connect" 
             className="connect-button" 
             onClick={loginAruba}
-            style={{ width: '100%', padding: '15px', background: '#e31a1a', color: 'white', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }}
+            disabled={isConnecting}
+            style={{ 
+              width: '100%', 
+              padding: '15px', 
+              background: '#e31a1a', 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '10px', 
+              fontWeight: 'bold', 
+              cursor: isConnecting ? 'not-allowed' : 'pointer',
+              opacity: isConnecting ? 0.8 : 1
+            }}
           >
-            Truy cập Wifi
+            {isConnecting ? "Đang kết nối..." : "Truy cập Wifi"}
           </button>
         </form>
       </motion.div>
