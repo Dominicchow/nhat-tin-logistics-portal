@@ -12,10 +12,11 @@ function App() {
 
     if (logInUrl) {
       // Chuyển hướng đến link của Aruba kèm lệnh chấp nhận
-      window.location.href = logInUrl + (logInUrl.includes('?') ? '&' : '?') + 'accept=true';
+      const target = logInUrl + (logInUrl.includes('?') ? '&' : '?') + 'accept=true';
+      window.location.replace(target);
     } else {
       // Nếu không có u, thử dùng link fallback của Aruba
-      window.location.href = "http://1.1.1.1/cgi-bin/login?cmd=authenticate&accept=true";
+      window.location.replace("http://1.1.1.1/cgi-bin/login?cmd=authenticate&accept=true");
     }
   };
 
@@ -56,7 +57,7 @@ function App() {
           Chào mừng bạn đến với mạng Wi-Fi Nhất Tín Logistics
         </p>
 
-        <button className="connect-button" onClick={handleConnect}>
+        <button type="button" className="connect-button" onClick={handleConnect}>
           Kết nối Internet
         </button>
       </motion.div>
