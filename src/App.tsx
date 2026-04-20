@@ -5,6 +5,19 @@ import illustration from './assets/illustration.png';
 import logo from './assets/logo-official.svg';
 
 function App() {
+  const handleConnect = () => {
+    // Lấy tham số 'u' từ URL
+    const params = new URLSearchParams(window.location.search);
+    const logInUrl = params.get('u');
+
+    if (logInUrl) {
+      // Chuyển hướng đến link của Aruba kèm lệnh chấp nhận
+      window.location.href = logInUrl + (logInUrl.includes('?') ? '&' : '?') + 'accept=true';
+    } else {
+      // Nếu không có u, thử dùng link fallback của Aruba
+      window.location.href = "http://1.1.1.1/cgi-bin/login?cmd=authenticate&accept=true";
+    }
+  };
 
   return (
     <div className="portal-wrapper">
@@ -43,16 +56,9 @@ function App() {
           Chào mừng bạn đến với mạng Wi-Fi Nhất Tín Logistics
         </p>
 
-        <form 
-          method="POST" 
-          action="http://1.1.1.1/cgi-bin/login?cmd=authenticate"
-          style={{ width: '100%' }}
-        >
-          <input type="hidden" name="accept" value="true" />
-          <button type="submit" className="connect-button">
-            Kết nối Internet
-          </button>
-        </form>
+        <button className="connect-button" onClick={handleConnect}>
+          Kết nối Internet
+        </button>
       </motion.div>
 
       <motion.div 
