@@ -8,16 +8,19 @@ function App() {
   const handleConnect = () => {
     // Lấy tham số 'u' từ URL
     const params = new URLSearchParams(window.location.search);
-    const logInUrl = params.get('u');
+    let logInUrl = params.get('u');
 
-    if (logInUrl) {
-      // Chuyển hướng đến link của Aruba kèm lệnh chấp nhận
-      const target = logInUrl + (logInUrl.includes('?') ? '&' : '?') + 'accept=true';
-      window.location.replace(target);
-    } else {
-      // Nếu không có u, thử dùng link fallback của Aruba
-      window.location.replace("http://1.1.1.1/cgi-bin/login?cmd=authenticate&accept=true");
+    // Nếu không có u, mặc định trỏ về gateway 1.1.1.1
+    if (!logInUrl) {
+      logInUrl = "http://1.1.1.1/cgi-bin/login?cmd=authenticate";
     }
+
+    const target = logInUrl + (logInUrl.includes('?') ? '&' : '?') + 'accept=true';
+    
+    // Hiển thị URL để gỡ lỗi trực tiếp trên thiết bị
+    alert("Đang chuyển hướng tới: " + target);
+    
+    window.location.href = target;
   };
 
   return (
