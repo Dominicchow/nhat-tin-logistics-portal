@@ -6,6 +6,21 @@ import logo from './assets/logo-official.svg';
 
 function App() {
 
+  const loginAruba = () => {
+    const params = new URLSearchParams(window.location.search);
+    const u = params.get('u');
+    const form = document.getElementById('aruba-login-form') as HTMLFormElement;
+    const urlInput = document.getElementById('original-url') as HTMLInputElement;
+
+    if (u && urlInput) {
+      urlInput.value = u;
+    }
+    
+    if (form) {
+      form.submit();
+    }
+  };
+
   return (
     <div className="portal-wrapper">
       <header className="logo-container">
@@ -43,10 +58,25 @@ function App() {
           Chào mừng bạn đến với mạng Wi-Fi Nhất Tín Logistics
         </p>
 
-        <form method="GET" action="http://1.1.1.1/cgi-bin/login" style={{ width: '100%' }}>
+        <form 
+          id="aruba-login-form" 
+          method="POST" 
+          action="https://securelogin.arubanetworks.com/cgi-bin/login" 
+          style={{ width: '100%' }}
+        >
+          <input type="hidden" name="user" value="guest" />
+          <input type="hidden" name="password" value="guest" />
           <input type="hidden" name="cmd" value="authenticate" />
-          <button type="submit" style={{ width: '100%', padding: '15px', background: '#e31a1a', color: 'white', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }}>
-            Kết nối Wi-Fi
+          <input type="hidden" name="url" id="original-url" value="" />
+
+          <button 
+            type="button" 
+            id="btn-connect" 
+            className="connect-button" 
+            onClick={loginAruba}
+            style={{ width: '100%', padding: '15px', background: '#e31a1a', color: 'white', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }}
+          >
+            Truy cập Wifi
           </button>
         </form>
       </motion.div>
