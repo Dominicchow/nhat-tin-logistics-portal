@@ -6,18 +6,8 @@ import logo from './assets/logo-official.svg';
 
 function App() {
   const handleConnect = () => {
-    // 1. Tìm xem Aruba có gửi kèm tham số "u" trên thanh địa chỉ không
-    const urlParams = new URLSearchParams(window.location.search);
-    const redirectUrl = urlParams.get('u');
-
-    if (redirectUrl) {
-      // 2. Nếu có, chuyển hướng trình duyệt đến địa chỉ đó kèm lệnh chấp nhận
-      // Lưu ý: Aruba Instant On thường yêu cầu thêm "?accept=true"
-      window.location.href = redirectUrl + (redirectUrl.includes('?') ? '&' : '?') + 'accept=true';
-    } else {
-      // Trường hợp đang test web bình thường mà không qua Wi-Fi Aruba
-      alert("Không tìm thấy tham số xác thực từ Aruba. Vui lòng test khi đang kết nối Wi-Fi Guest.");
-    }
+    // Trỏ thẳng về địa chỉ xác thực của Aruba theo yêu cầu
+    window.location.href = 'https://portal-embed.arubainstanton.com/cgi-bin/login?cmd=authenticate';
   };
 
   return (
