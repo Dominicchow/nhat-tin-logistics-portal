@@ -61,7 +61,7 @@ function App() {
         <form 
           id="aruba-login-form" 
           method="POST" 
-          action="https://securelogin.arubanetworks.com/cgi-bin/login" 
+          action="http://securelogin.arubanetworks.com/cgi-bin/login" 
           style={{ width: '100%' }}
         >
           <input type="hidden" name="user" value="guest" />
