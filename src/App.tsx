@@ -5,23 +5,6 @@ import illustration from './assets/illustration.png';
 import logo from './assets/logo-official.svg';
 
 function App() {
-  const handleConnect = () => {
-    // Lấy tham số 'u' từ URL
-    const params = new URLSearchParams(window.location.search);
-    let logInUrl = params.get('u');
-
-    // Nếu không có u, mặc định trỏ về gateway 1.1.1.1
-    if (!logInUrl) {
-      logInUrl = "http://1.1.1.1/cgi-bin/login?cmd=authenticate";
-    }
-
-    const target = logInUrl + (logInUrl.includes('?') ? '&' : '?') + 'accept=true';
-    
-    // Hiển thị URL để gỡ lỗi trực tiếp trên thiết bị
-    alert("Đang chuyển hướng tới: " + target);
-    
-    window.location.href = target;
-  };
 
   return (
     <div className="portal-wrapper">
@@ -60,9 +43,17 @@ function App() {
           Chào mừng bạn đến với mạng Wi-Fi Nhất Tín Logistics
         </p>
 
-        <button type="button" className="connect-button" onClick={handleConnect}>
-          Kết nối Internet
-        </button>
+        <form 
+          method="POST" 
+          action="https://portal-embed.arubainstanton.com/cgi-bin/login"
+          style={{ width: '100%' }}
+        >
+          <input type="hidden" name="cmd" value="authenticate" />
+          <input type="hidden" name="accept" value="true" />
+          <button type="submit" className="connect-button">
+            Kết nối Wi-Fi
+          </button>
+        </form>
       </motion.div>
 
       <motion.div 
