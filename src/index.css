@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --brand-red: #d91500;
+  --text-black: #000000;
+  --text-white: #ffffff;
+  --card-radius: 30px;
+  --button-radius: 14px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('./assets/background.png');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background overlay per Figma design */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('./assets/bg-overlay.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.32;
+  mix-blend-mode: normal;
+  pointer-events: none;
+}
+
+.portal-wrapper {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 360px;
+  gap: 24px;
+}
+
+.logo-container {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.illustration-img {
+  width: 304px;
+  height: auto;
+  object-fit: contain;
+}
+
+.portal-card {
+  background: white;
+  width: 100%;
+  border-radius: var(--card-radius);
+  padding: 32px 24px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.wifi-icon-wrapper {
+  background: var(--brand-red);
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  color: white;
+}
+
+.portal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-black);
+  margin-bottom: 12px;
+}
+
+.portal-subtitle {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-black);
+  line-height: 1.5;
+  margin-bottom: 32px;
+  padding: 0 10px;
+}
+
+.connect-button {
+  width: 100%;
+  background: var(--brand-red);
+  color: white;
+  border: none;
+  padding: 20px;
+  border-radius: var(--button-radius);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.connect-button:hover {
+  opacity: 0.9;
+}
+
+.hotline-footer {
+  color: white;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 10px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+@media (max-height: 700px) {
+  .illustration-img {
+    width: 200px;
+  }
+  .portal-wrapper {
+    gap: 12px;
+  }
+}
