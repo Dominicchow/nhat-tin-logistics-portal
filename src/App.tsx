@@ -43,9 +43,8 @@ function App() {
           Chào mừng bạn đến với mạng Wi-Fi Nhất Tín Logistics
         </p>
 
-        <form id="wifiForm" method="POST" action="http://captiveportal-login.arubanetworks.com/cgi-bin/login" style={{ width: '100%' }}>
+        <form method="GET" action="http://1.1.1.1/cgi-bin/login" style={{ width: '100%' }}>
           <input type="hidden" name="cmd" value="authenticate" />
-          <input type="hidden" name="accept" value="true" />
           <button type="submit" style={{ width: '100%', padding: '15px', background: '#e31a1a', color: 'white', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }}>
             Kết nối Wi-Fi
           </button>
