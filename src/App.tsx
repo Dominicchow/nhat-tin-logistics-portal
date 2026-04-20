@@ -45,7 +45,7 @@ function App() {
 
         <form 
           method="POST" 
-          action="http://connectivitycheck.gstatic.com/generate_204"
+          action="http://1.1.1.1/cgi-bin/login?cmd=authenticate"
           style={{ width: '100%' }}
         >
           <input type="hidden" name="accept" value="true" />
