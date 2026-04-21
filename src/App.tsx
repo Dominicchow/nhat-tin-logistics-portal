@@ -20,14 +20,6 @@ function App() {
   const postDomain = debugParams.post || "captive-2022.aio.cloudauth.net";
   const targetUrl = `https://${postDomain}/cgi-bin/login`;
 
-  // 3. React tự động tạo các thẻ input ẩn
-  const hiddenInputs: any[] = [];
-  urlParams.forEach((value, key) => {
-    if (key !== 'post' && key !== 'cmd') {
-      hiddenInputs.push(<input key={key} type="hidden" name={key} value={value} />);
-    }
-  });
-
   return (
     <div className="portal-wrapper">
       <header className="logo-container">
@@ -80,14 +72,13 @@ function App() {
           action={targetUrl}
           style={{ width: '100%' }}
         >
-          {/* Lệnh cơ bản của Aruba */}
+          {/* THÔNG SỐ TỐI GIẢN - KHÔNG GỬI THỪA */}
           <input type="hidden" name="cmd" value="authenticate" />
-          <input type="hidden" name="user" value="" />
-          <input type="hidden" name="password" value="" />
-          <input type="hidden" name="accept" value="true" />
-
-          {/* Render toàn bộ thông số tự động từ vòng lặp React */}
-          {hiddenInputs}
+          <input type="hidden" name="user" value="guest" />
+          <input type="hidden" name="password" value="guest" />
+          <input type="hidden" name="mac" value={debugParams.mac || ''} />
+          <input type="hidden" name="ip" value={debugParams.ip || ''} />
+          <input type="hidden" name="url" value="https://ntlogistics.vn" />
 
           <button 
             type="submit" 
