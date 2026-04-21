@@ -76,7 +76,7 @@ function App() {
         <form 
           id="aruba-login-form" 
           method="POST" 
-          action={`https://${postDomain}/cgi-bin/login`}
+          action={`http://${postDomain}/cgi-bin/login`}
           style={{ width: '100%' }}
         >
           {/* cmd=login = lệnh cho Acknowledgment mode (không cần user/password) */}
