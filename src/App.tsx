@@ -6,12 +6,22 @@ import illustration from './assets/illustration.png';
 import logo from './assets/logo-official.svg';
 
 function App() {
-  // Đọc toàn bộ tham số Aruba từ URL
   const urlParams = new URLSearchParams(window.location.search);
-  const clientMac = urlParams.get('mac') || '';
-  const clientIp  = urlParams.get('ip')  || '';
   const postDomain = urlParams.get('post') || 'captive-2022.aio.cloudauth.net';
-  const errmsg = urlParams.get('errmsg') || urlParams.get('error') || '';
+  const errmsg     = urlParams.get('errmsg') || urlParams.get('error') || '';
+
+  // "Vòng lặp thần thánh" v2: Relay TẤT CẢ tham số Aruba gửi về, dùng cmd=login
+  const hiddenInputs: any[] = [];
+  urlParams.forEach((value, key) => {
+    // Bỏ qua: post (đã dùng làm action URL), cmd (ta tự set), và các error param
+    const skip = ['post', 'cmd', 'errmsg', 'error'];
+    if (!skip.includes(key)) {
+      hiddenInputs.push(<input key={key} type="hidden" name={key} value={value} />);
+    }
+  });
+
+  // Hiện toàn bộ URL để debug - tìm params ẩn
+  const fullUrl = window.location.href;
 
   return (
     <div className="portal-wrapper">
@@ -50,26 +60,25 @@ function App() {
           Chào mừng bạn đến với mạng Wi-Fi Nhất Tín Logistics
         </p>
 
-        {/* Debug Panel */}
-        <div style={{ fontSize: '10px', background: '#ffebee', padding: '10px', marginBottom: '15px', borderRadius: '5px', textAlign: 'left', color: '#b71c1c', borderLeft: '3px solid #d91500', wordBreak: 'break-all' }}>
-          <strong>Trạng thái kết nối:</strong><br/>
-          {errmsg && <><b>Lỗi: {errmsg}</b><br/></>}
-          MAC: {clientMac || 'Trống'} | IP: {clientIp || 'Trống'}<br/>
-          AP Domain: {postDomain}
+        {/* Debug: Hiện toàn bộ URL để tìm tất cả tham số Aruba gửi về */}
+        <div style={{ fontSize: '9px', background: '#ffebee', padding: '8px', marginBottom: '12px', borderRadius: '5px', textAlign: 'left', color: '#b71c1c', borderLeft: '3px solid #d91500', wordBreak: 'break-all' }}>
+          <strong>Debug URL:</strong><br/>
+          {fullUrl}<br/>
+          {errmsg && <><strong>Lỗi: {errmsg}</strong><br/></>}
+          <strong>Tất cả Params:</strong> {Array.from(urlParams.entries()).map(([k, v]) => `${k}=${v}`).join(' | ')}
         </div>
 
-        {/* Form POST lên Aruba Cloud Auth với cmd=login (Acknowledgment mode) */}
+        {/* Form POST cmd=login (Acknowledgment) + relay toàn bộ params Aruba đã gửi */}
         <form 
           id="aruba-login-form" 
           method="POST" 
           action={`https://${postDomain}/cgi-bin/login`}
           style={{ width: '100%' }}
         >
-          {/* cmd=login dành cho Acknowledgment mode (KHÔNG cần user/password) */}
+          {/* cmd=login = lệnh cho Acknowledgment mode (không cần user/password) */}
           <input type="hidden" name="cmd" value="login" />
-          <input type="hidden" name="mac" value={clientMac} />
-          <input type="hidden" name="ip" value={clientIp} />
-          <input type="hidden" name="url" value="https://ntlogistics.vn" />
+          {/* Relay tất cả params Aruba gửi cho ta (mac, ip, url, essid, apname...) */}
+          {hiddenInputs}
 
           <button 
             type="submit" 
