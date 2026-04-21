@@ -1,4 +1,4 @@
-import { useState } from 'react';
+
 import { motion } from 'framer-motion';
 import { Wifi } from 'lucide-react';
 import './index.css';
@@ -6,22 +6,21 @@ import illustration from './assets/illustration.png';
 import logo from './assets/logo-official.svg';
 
 function App() {
-  const [isConnecting, setIsConnecting] = useState(false);
-
   // 1. Phân tích URL ngay từ lúc trang bắt đầu tải
   const urlParams = new URLSearchParams(window.location.search);
   const debugParams = {
     post: urlParams.get('post'),
     mac: urlParams.get('mac'),
     ip: urlParams.get('ip'),
-    url: urlParams.get('url')
+    url: urlParams.get('url'),
+    errmsg: urlParams.get('errmsg') || urlParams.get('error')
   };
 
-  // 2. Xác định cấu hình đích (Luôn dùng HTTPS chuẩn)
+  // 2. Xác định cấu hình đích 
   const postDomain = debugParams.post || "captive-2022.aio.cloudauth.net";
   const targetUrl = `https://${postDomain}/cgi-bin/login`;
 
-  // 3. React tự động tạo các thẻ input ẩn cho tất cả các thông số
+  // 3. React tự động tạo các thẻ input ẩn
   const hiddenInputs: any[] = [];
   urlParams.forEach((value, key) => {
     if (key !== 'post' && key !== 'cmd') {
@@ -66,35 +65,42 @@ function App() {
           Chào mừng bạn đến với mạng Wi-Fi Nhất Tín Logistics
         </p>
 
-        {/* Bảng hệ thống tự quét thông tin thiết bị (Ẩn nếu bạn không muốn khách thấy) */}
-        <div style={{ fontSize: '10px', background: '#f0f0f0', padding: '10px', marginBottom: '15px', borderRadius: '5px', textAlign: 'left', color: '#666', borderLeft: '3px solid #d91500' }}>
+        {/* Bảng hệ thống Debug Nâng cao */}
+        <div style={{ fontSize: '10px', background: '#ffebee', padding: '10px', marginBottom: '15px', borderRadius: '5px', textAlign: 'left', color: '#b71c1c', borderLeft: '3px solid #d91500', wordBreak: 'break-all' }}>
           <strong>Trạng thái kết nối từ hệ thống:</strong><br/>
-          Server trạm: {debugParams.post ? 'Đã nhận diện' : 'Mặc định'}<br/>
-          Thiết bị (MAC): {debugParams.mac || 'Đang quét...'}<br/>
-          Cổng kết nối: {debugParams.ip || 'Đang quét...'}
+          Mã lỗi trả về (nếu có): <b>{debugParams.errmsg || 'Không có mã lỗi'}</b><br/>
+          MAC: {debugParams.mac || 'Trống'} | IP: {debugParams.ip || 'Trống'}<br/>
+          Domain Post: {debugParams.post || 'Mặc định'}<br/>
         </div>
 
-        {/* FORM THUẦN HTML: Trình duyệt không thể chặn */}
+        {/* FORM THUẦN HTML */}
         <form 
           id="aruba-login-form" 
           method="POST" 
           action={targetUrl}
-          onSubmit={() => setIsConnecting(true)}
           style={{ width: '100%' }}
         >
           {/* Lệnh cơ bản của Aruba */}
           <input type="hidden" name="cmd" value="authenticate" />
+          <input type="hidden" name="accept" value="true" />
           <input type="hidden" name="user" value="guest" />
           <input type="hidden" name="password" value="guest" />
 
-          {/* Render toàn bộ thông số tự động từ vòng lặp React */}
+          {/* Render toàn bộ thông số tự động từ vòng lặp */}
           {hiddenInputs}
 
           <button 
             type="submit" 
             id="btn-connect" 
             className="connect-button" 
-            disabled={isConnecting}
+            onClick={(e) => {
+              // Chỉ đổi giao diện nút, không dùng React State để Form gửi đi 100% mượt mà
+              const btn = e.currentTarget;
+              setTimeout(() => {
+                btn.innerText = "Đang kết nối vào hệ thống...";
+                btn.style.opacity = "0.7";
+              }, 10);
+            }}
             style={{ 
               width: '100%', 
               padding: '15px', 
@@ -103,11 +109,10 @@ function App() {
               border: 'none', 
               borderRadius: '10px', 
               fontWeight: 'bold', 
-              cursor: isConnecting ? 'not-allowed' : 'pointer',
-              opacity: isConnecting ? 0.7 : 1
+              cursor: 'pointer'
             }}
           >
-            {isConnecting ? "Đang cấp quyền..." : "Truy cập Wifi"}
+            Truy cập Wifi
           </button>
         </form>
       </motion.div>
