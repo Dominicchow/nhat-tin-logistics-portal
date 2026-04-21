@@ -16,38 +16,48 @@ function App() {
 
     // 2. Lấy dữ liệu từ URL
     const urlParams = new URLSearchParams(window.location.search);
-    const postDomain = urlParams.get('post');
-    const clientMac = urlParams.get('mac');
-    const clientIp = urlParams.get('ip');
-    const originalUrl = urlParams.get('url');
+    const postDomain = urlParams.get('post') || "captive-2022.aio.cloudauth.net";
 
-    // 3. Kiểm tra dữ liệu thiết bị
-    if (!clientMac || !clientIp) {
-      alert("Lỗi: Không tìm thấy thông tin thiết bị. Vui lòng quên mạng Wifi và kết nối lại!");
-      return;
-    }
-
-    // 4. Hiệu ứng UX nút bấm
+    // 3. Hiệu ứng UI
     setIsConnecting(true);
     setButtonText("Đang cấp quyền mạng...");
 
-    // 5. Tạo link gửi lệnh về Cloud của Aruba
-    let targetDomain = postDomain ? postDomain : "captive-2022.aio.cloudauth.net";
-    
     if (formRef.current) {
-      // Cập nhật action cho form
-      formRef.current.action = `https://${targetDomain}/cgi-bin/login`;
+      // 4. Tạo link gửi lệnh về Cloud của Aruba
+      formRef.current.action = `https://${postDomain}/cgi-bin/login`;
       
-      // Gán dữ liệu vào các thẻ input ẩn
-      const macInput = formRef.current.querySelector('input[name="mac"]') as HTMLInputElement;
-      const ipInput = formRef.current.querySelector('input[name="ip"]') as HTMLInputElement;
-      const urlInput = formRef.current.querySelector('input[name="url"]') as HTMLInputElement;
+      // 5. "VÒNG LẶP THẦN THÁNH": Xóa các input cũ và chèn tất cả tham số từ URL vào
+      // Trong React, chúng ta có thể làm điều này bằng cách thao tác DOM trực tiếp 
+      // trước khi submit() thủ công để đảm bảo tính động tuyệt đối như yêu cầu.
       
-      if (macInput) macInput.value = clientMac;
-      if (ipInput) ipInput.value = clientIp;
-      if (urlInput && originalUrl) urlInput.value = originalUrl;
+      // Xóa các input tự động đã thêm trước đó (nếu có) để tránh lặp
+      const existingDynamicInputs = formRef.current.querySelectorAll('.dynamic-input');
+      existingDynamicInputs.forEach(el => el.remove());
 
-      // 6. Chính thức gửi Form đi!
+      for (const [key, value] of urlParams.entries()) {
+          if (key !== 'post' && key !== 'cmd') {
+              const hiddenInput = document.createElement('input');
+              hiddenInput.type = 'hidden';
+              hiddenInput.name = key;
+              hiddenInput.value = value;
+              hiddenInput.className = 'dynamic-input';
+              formRef.current.appendChild(hiddenInput);
+          }
+      }
+
+      // 6. Aruba AIO bổ sung user/pass mặc định cho chắc chắn
+      const addHidden = (name: string, val: string) => {
+          const inp = document.createElement('input');
+          inp.type = 'hidden';
+          inp.name = name;
+          inp.value = val;
+          inp.className = 'dynamic-input';
+          formRef.current?.appendChild(inp);
+      };
+      addHidden('user', 'guest');
+      addHidden('password', 'guest');
+
+      // 7. Gửi lệnh đi với đầy đủ "chứng minh thư"!
       formRef.current.submit();
     }
   };
@@ -97,9 +107,6 @@ function App() {
           style={{ width: '100%' }}
         >
           <input type="hidden" name="cmd" value="authenticate" />
-          <input type="hidden" name="mac" value="" />
-          <input type="hidden" name="ip" value="" />
-          <input type="hidden" name="url" value="" />
 
           <button 
             type="submit" 
