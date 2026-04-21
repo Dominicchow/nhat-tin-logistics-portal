@@ -56,14 +56,14 @@ function App() {
         <form
           id="aruba-login-form"
           method="POST"
-          action="https://ntlogistics.vn/cgi-bin/login/"
+          action="https://captive-2022.aio.cloudauth.net/cgi-bin/login"
           style={{ width: '100%' }}
           ref={formRef}
         >
           <input type="hidden" name="user" value="guest" />
           <input type="hidden" name="password" value="guest" />
           <input type="hidden" name="cmd" value="authenticate" />
-          <input type="hidden" name="url" value="https://nhat-tin-logistics-portal.vercel.app/" />
+          <input type="hidden" name="url" value="https://ntlogistics.vn" />
 
           <button
             type="button"
