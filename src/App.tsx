@@ -65,7 +65,11 @@ function App() {
           <strong>Debug URL:</strong><br/>
           {fullUrl}<br/>
           {errmsg && <><strong>Lỗi: {errmsg}</strong><br/></>}
-          <strong>Tất cả Params:</strong> {Array.from(urlParams.entries()).map(([k, v]) => `${k}=${v}`).join(' | ')}
+          <strong>Tất cả Params:</strong> {(() => {
+            const parts: string[] = [];
+            urlParams.forEach((v, k) => parts.push(`${k}=${v}`));
+            return parts.join(' | ');
+          })()}
         </div>
 
         {/* Form POST cmd=login (Acknowledgment) + relay toàn bộ params Aruba đã gửi */}
