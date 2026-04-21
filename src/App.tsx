@@ -56,7 +56,7 @@ function App() {
         <form
           id="aruba-login-form"
           method="POST"
-          action="http://ntlogistics.vn/cgi-bin/login/"
+          action="https://ntlogistics.vn/cgi-bin/login/"
           style={{ width: '100%' }}
           ref={formRef}
         >
