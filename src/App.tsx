@@ -23,7 +23,8 @@ function App() {
   const loginAruba = () => {
     // 1. Tìm tên miền Cloud của Aruba
     const postDomain = urlParams.get('post') || "captive-2022.aio.cloudauth.net";
-    const targetUrl = `https://${postDomain}/cgi-bin/login`;
+    // Chuyển sang HTTP để tránh lỗi chặn HTTPS khi chưa có mạng
+    const targetUrl = `http://${postDomain}/cgi-bin/login`;
 
     // 2. Hiệu ứng UI
     setIsConnecting(true);
@@ -47,18 +48,6 @@ function App() {
               formRef.current?.appendChild(hiddenInput);
           }
       });
-
-      // Bổ sung guest auth
-      const addHidden = (name: string, val: string) => {
-          const inp = document.createElement('input');
-          inp.type = 'hidden';
-          inp.name = name;
-          inp.value = val;
-          inp.className = 'dynamic-input';
-          formRef.current?.appendChild(inp);
-      };
-      addHidden('user', 'guest');
-      addHidden('password', 'guest');
 
       // Gỡ lỗi: Hiện Alert để người dùng biết target
       // alert("Đang gửi lệnh tới: " + targetUrl);
