@@ -7,7 +7,6 @@ import logo from './assets/logo-official.svg';
 
 function App() {
   const urlParams = new URLSearchParams(window.location.search);
-  const postDomain = urlParams.get('post') || 'captive-2022.aio.cloudauth.net';
   const errmsg     = urlParams.get('errmsg') || urlParams.get('error') || '';
 
   // "Vòng lặp thần thánh" v2: Relay TẤT CẢ tham số Aruba gửi về, dùng cmd=login
