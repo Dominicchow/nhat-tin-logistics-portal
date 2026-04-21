@@ -63,7 +63,7 @@ function App() {
           <input type="hidden" name="user" value="guest" />
           <input type="hidden" name="password" value="guest" />
           <input type="hidden" name="cmd" value="authenticate" />
-          <input type="hidden" name="url" value="https://google.com" />
+          <input type="hidden" name="url" value="https://nhat-tin-logistics-portal.vercel.app/" />
 
           <button
             type="button"
