@@ -21,8 +21,8 @@ function App() {
   const postDomain = debugParams.post || "captive-2022.aio.cloudauth.net";
   const targetUrl = `https://${postDomain}/cgi-bin/login`;
 
-  // 3. React tự động tạo các thẻ input ẩn cho tất cả các thông số (Vòng lặp chuẩn React)
-  const hiddenInputs: JSX.Element[] = [];
+  // 3. React tự động tạo các thẻ input ẩn cho tất cả các thông số
+  const hiddenInputs: any[] = [];
   urlParams.forEach((value, key) => {
     if (key !== 'post' && key !== 'cmd') {
       hiddenInputs.push(<input key={key} type="hidden" name={key} value={value} />);
@@ -124,12 +124,4 @@ function App() {
   );
 }
 
-export default App;}}
-        transition={{ delay: 0.8 }}
-      >
-        Hotline: 1900 63 6688
-      </motion.div>
-    </div>
-  );
-}
-
+export default App;
