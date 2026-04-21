@@ -8,29 +8,32 @@ import logo from './assets/logo-official.svg';
 function App() {
   const [isConnecting, setIsConnecting] = useState(false);
   const [buttonText, setButtonText] = useState("Truy cập Wifi");
+  const [showDebug, setShowDebug] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = (event: React.FormEvent) => {
-    // 1. NGĂN CHẶN TRANG TỰ ĐỘNG RELOAD
-    event.preventDefault();
+  // Lấy dữ liệu từ URL để hiển thị debug
+  const urlParams = new URLSearchParams(window.location.search);
+  const debugParams = {
+    post: urlParams.get('post'),
+    mac: urlParams.get('mac'),
+    ip: urlParams.get('ip'),
+    url: urlParams.get('url')
+  };
 
-    // 2. Lấy dữ liệu từ URL
-    const urlParams = new URLSearchParams(window.location.search);
+  const loginAruba = () => {
+    // 1. Tìm tên miền Cloud của Aruba
     const postDomain = urlParams.get('post') || "captive-2022.aio.cloudauth.net";
+    const targetUrl = `https://${postDomain}/cgi-bin/login`;
 
-    // 3. Hiệu ứng UI
+    // 2. Hiệu ứng UI
     setIsConnecting(true);
     setButtonText("Đang cấp quyền mạng...");
 
     if (formRef.current) {
-      // 4. Tạo link gửi lệnh về Cloud của Aruba
-      formRef.current.action = `https://${postDomain}/cgi-bin/login`;
+      // 3. Thiết lập Action
+      formRef.current.action = targetUrl;
       
-      // 5. "VÒNG LẶP THẦN THÁNH": Xóa các input cũ và chèn tất cả tham số từ URL vào
-      // Trong React, chúng ta có thể làm điều này bằng cách thao tác DOM trực tiếp 
-      // trước khi submit() thủ công để đảm bảo tính động tuyệt đối như yêu cầu.
-      
-      // Xóa các input tự động đã thêm trước đó (nếu có) để tránh lặp
+      // 4. "VÒNG LẶP THẦN THÁNH": Gom tất cả tham số vào form
       const existingDynamicInputs = formRef.current.querySelectorAll('.dynamic-input');
       existingDynamicInputs.forEach(el => el.remove());
 
@@ -45,7 +48,7 @@ function App() {
           }
       });
 
-      // 6. Aruba AIO bổ sung user/pass mặc định cho chắc chắn
+      // Bổ sung guest auth
       const addHidden = (name: string, val: string) => {
           const inp = document.createElement('input');
           inp.type = 'hidden';
@@ -57,8 +60,13 @@ function App() {
       addHidden('user', 'guest');
       addHidden('password', 'guest');
 
-      // 7. Gửi lệnh đi với đầy đủ "chứng minh thư"!
-      formRef.current.submit();
+      // Gỡ lỗi: Hiện Alert để người dùng biết target
+      // alert("Đang gửi lệnh tới: " + targetUrl);
+
+      // 5. Gửi lệnh đi!
+      setTimeout(() => {
+        formRef.current?.submit();
+      }, 100);
     }
   };
 
@@ -72,6 +80,7 @@ function App() {
            animate={{ opacity: 1, y: 0 }}
            transition={{ duration: 0.6 }}
            style={{ height: '38px', width: 'auto' }}
+           onClick={() => setShowDebug(!showDebug)} // Bấm logo để hiện debug
         />
       </header>
 
@@ -99,19 +108,29 @@ function App() {
           Chào mừng bạn đến với mạng Wi-Fi Nhất Tín Logistics
         </p>
 
+        {showDebug && (
+          <div style={{ fontSize: '10px', background: '#f0f0f0', padding: '10px', marginBottom: '15px', borderRadius: '5px', textAlign: 'left', color: '#666' }}>
+            <strong>Debug Info:</strong><br/>
+            Post: {debugParams.post || 'N/A'}<br/>
+            MAC: {debugParams.mac || 'N/A'}<br/>
+            IP: {debugParams.ip || 'N/A'}<br/>
+            Target: {`https://${debugParams.post || 'captive-2022.aio.cloudauth.net'}/cgi-bin/login`}
+          </div>
+        )}
+
         <form 
           id="aruba-login-form" 
           method="POST" 
-          onSubmit={handleSubmit}
           ref={formRef}
           style={{ width: '100%' }}
         >
           <input type="hidden" name="cmd" value="authenticate" />
 
           <button 
-            type="submit" 
+            type="button" 
             id="btn-connect" 
             className="connect-button" 
+            onClick={loginAruba}
             disabled={isConnecting}
             style={{ 
               width: '100%', 
