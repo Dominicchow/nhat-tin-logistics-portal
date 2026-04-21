@@ -34,16 +34,16 @@ function App() {
       const existingDynamicInputs = formRef.current.querySelectorAll('.dynamic-input');
       existingDynamicInputs.forEach(el => el.remove());
 
-      for (const [key, value] of urlParams.entries()) {
+      urlParams.forEach((value, key) => {
           if (key !== 'post' && key !== 'cmd') {
               const hiddenInput = document.createElement('input');
               hiddenInput.type = 'hidden';
               hiddenInput.name = key;
               hiddenInput.value = value;
               hiddenInput.className = 'dynamic-input';
-              formRef.current.appendChild(hiddenInput);
+              formRef.current?.appendChild(hiddenInput);
           }
-      }
+      });
 
       // 6. Aruba AIO bổ sung user/pass mặc định cho chắc chắn
       const addHidden = (name: string, val: string) => {
