@@ -72,36 +72,35 @@ function App() {
           })()}
         </div>
 
-        {/* Form POST cmd=login (Acknowledgment) + relay toàn bộ params Aruba đã gửi */}
-        <form 
-          id="aruba-login-form" 
-          method="POST" 
-          action={`http://${postDomain}/cgi-bin/login`}
-          style={{ width: '100%' }}
+        {/* Dùng window.location.href thay form POST để tránh Mixed Content block */}
+        <button 
+          id="btn-connect" 
+          className="connect-button"
+          onClick={() => {
+            // Build query string từ tất cả params Aruba gửi
+            const loginParams = new URLSearchParams();
+            loginParams.set('cmd', 'login');
+            urlParams.forEach((v, k) => {
+              if (!['post', 'cmd', 'errmsg', 'error'].includes(k)) {
+                loginParams.set(k, v);
+              }
+            });
+            // Điều hướng sang HTTP (navigation, không phải fetch → không bị Mixed Content block)
+            window.location.href = `http://${postDomain}/cgi-bin/login?${loginParams.toString()}`;
+          }}
+          style={{ 
+            width: '100%', 
+            padding: '15px', 
+            background: '#e31a1a', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '10px', 
+            fontWeight: 'bold', 
+            cursor: 'pointer'
+          }}
         >
-          {/* cmd=login = lệnh cho Acknowledgment mode (không cần user/password) */}
-          <input type="hidden" name="cmd" value="login" />
-          {/* Relay tất cả params Aruba gửi cho ta (mac, ip, url, essid, apname...) */}
-          {hiddenInputs}
-
-          <button 
-            type="submit" 
-            id="btn-connect" 
-            className="connect-button" 
-            style={{ 
-              width: '100%', 
-              padding: '15px', 
-              background: '#e31a1a', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '10px', 
-              fontWeight: 'bold', 
-              cursor: 'pointer'
-            }}
-          >
-            Truy cập Wifi
-          </button>
-        </form>
+          Truy cập Wifi
+        </button>
       </motion.div>
 
       <motion.div 
