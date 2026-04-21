@@ -56,7 +56,7 @@ function App() {
         <form
           id="aruba-login-form"
           method="POST"
-          action="https://google.com/cgi-bin/login"
+          action="captive-2022.aio.cloudauth.net/cgi-bin/login"
           style={{ width: '100%' }}
           ref={formRef}
         >
