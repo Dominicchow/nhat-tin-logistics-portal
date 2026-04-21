@@ -71,32 +71,30 @@ function App() {
           })()}
         </div>
 
-        {/* Gọi Vercel API proxy → proxy POST lên Aruba qua HTTP phía server */}
-        <button 
-          id="btn-connect" 
-          className="connect-button"
-          onClick={() => {
-            // Đưa TẤT CẢ params vào URL để API proxy xử lý
-            const apiParams = new URLSearchParams();
-            urlParams.forEach((v, k) => {
-              apiParams.set(k, v);
-            });
-            // HTTPS→HTTPS: không Mixed Content. Vercel server sẽ POST HTTP lên Aruba
-            window.location.href = `/api/aruba-login?${apiParams.toString()}`;
-          }}
-          style={{ 
-            width: '100%', 
-            padding: '15px', 
-            background: '#e31a1a', 
-            color: 'white', 
-            border: 'none', 
-            borderRadius: '10px', 
-            fontWeight: 'bold', 
-            cursor: 'pointer'
-          }}
-        >
-          Truy cập Wifi
-        </button>
+        {/* Form POST sang API của mình (HTTPS→HTTPS, không Mixed Content) */}
+        {/* API sẽ 307 redirect → browser tự POST sang Aruba HTTP */}
+        <form method="POST" action="/api/aruba-login" style={{ width: '100%' }}>
+          <input type="hidden" name="cmd" value="login" />
+          {/* Divine loop: relay tất cả params Aruba gửi */}
+          {hiddenInputs}
+          <button 
+            type="submit"
+            id="btn-connect" 
+            className="connect-button"
+            style={{ 
+              width: '100%', 
+              padding: '15px', 
+              background: '#e31a1a', 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '10px', 
+              fontWeight: 'bold', 
+              cursor: 'pointer'
+            }}
+          >
+            Truy cập Wifi
+          </button>
+        </form>
       </motion.div>
 
       <motion.div 
