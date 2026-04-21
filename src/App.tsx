@@ -56,7 +56,7 @@ function App() {
         <form
           id="aruba-login-form"
           method="POST"
-          action="https://nhat-tin-logistics-portal.vercel.app/cgi-bin/login"
+          action="https://google.com/cgi-bin/login"
           style={{ width: '100%' }}
           ref={formRef}
         >
