@@ -13,10 +13,6 @@ function App() {
   const postDomain = urlParams.get('post') || 'captive-2022.aio.cloudauth.net';
   const errmsg = urlParams.get('errmsg') || urlParams.get('error') || '';
 
-  // Vercel serverless function của chúng ta sẽ trả về "Aruba.InstantOn.Acknowledge"
-  // Đây là cơ chế Acknowledgment mode: AP đọc chuỗi này từ server rồi mở mạng
-  const actionUrl = `/api/acknowledge?mac=${encodeURIComponent(clientMac)}&ip=${encodeURIComponent(clientIp)}&post=${encodeURIComponent(postDomain)}`;
-
   return (
     <div className="portal-wrapper">
       <header className="logo-container">
@@ -62,13 +58,19 @@ function App() {
           AP Domain: {postDomain}
         </div>
 
-        {/* Form gọi Vercel API để trả chuỗi Aruba.InstantOn.Acknowledge */}
+        {/* Form POST lên Aruba Cloud Auth với cmd=login (Acknowledgment mode) */}
         <form 
           id="aruba-login-form" 
-          method="GET" 
-          action={actionUrl}
+          method="POST" 
+          action={`https://${postDomain}/cgi-bin/login`}
           style={{ width: '100%' }}
         >
+          {/* cmd=login dành cho Acknowledgment mode (KHÔNG cần user/password) */}
+          <input type="hidden" name="cmd" value="login" />
+          <input type="hidden" name="mac" value={clientMac} />
+          <input type="hidden" name="ip" value={clientIp} />
+          <input type="hidden" name="url" value="https://ntlogistics.vn" />
+
           <button 
             type="submit" 
             id="btn-connect" 
