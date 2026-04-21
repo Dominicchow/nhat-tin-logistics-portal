@@ -82,6 +82,9 @@ function App() {
         >
           {/* Lệnh cơ bản của Aruba */}
           <input type="hidden" name="cmd" value="authenticate" />
+          <input type="hidden" name="user" value="" />
+          <input type="hidden" name="password" value="" />
+          <input type="hidden" name="accept" value="true" />
 
           {/* Render toàn bộ thông số tự động từ vòng lặp React */}
           {hiddenInputs}
