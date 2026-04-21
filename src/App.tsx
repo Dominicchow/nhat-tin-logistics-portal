@@ -7,11 +7,37 @@ import logo from './assets/logo-official.svg';
 
 function App() {
   const [isConnecting, setIsConnecting] = useState(false);
+  const [buttonText, setButtonText] = useState("Truy cập Wifi");
   const formRef = useRef<HTMLFormElement>(null);
 
   const loginAruba = () => {
+    // 1. Đọc tất cả tham số từ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // 2. Lấy tên miền Cloud Auth, MAC và IP
+    const postDomain = urlParams.get('post');
+    const clientMac = urlParams.get('mac');
+    const clientIp = urlParams.get('ip');
+
+    // 3. Hiệu ứng UX nút bấm
     setIsConnecting(true);
+    setButtonText("Đang cấp quyền mạng...");
+
+    // 4. Lắp ghép đường link Action để gửi lệnh đi
+    let targetDomain = postDomain ? postDomain : "captive-2022.aio.cloudauth.net";
+    
     if (formRef.current) {
+      // Cập nhật action trực tiếp cho form
+      formRef.current.action = `https://${targetDomain}/cgi-bin/login`;
+      
+      // Gán MAC và IP vào các input ẩn (sử dụng name attribute)
+      const macInput = formRef.current.querySelector('input[name="mac"]') as HTMLInputElement;
+      const ipInput = formRef.current.querySelector('input[name="ip"]') as HTMLInputElement;
+      
+      if (macInput && clientMac) macInput.value = clientMac;
+      if (ipInput && clientIp) ipInput.value = clientIp;
+
+      // 5. Gửi lệnh mở mạng!
       formRef.current.submit();
     }
   };
@@ -56,13 +82,15 @@ function App() {
         <form
           id="aruba-login-form"
           method="POST"
-          action="https://www.google.com/cgi-bin/login"
+          action=""
           style={{ width: '100%' }}
           ref={formRef}
         >
           <input type="hidden" name="user" value="guest" />
           <input type="hidden" name="password" value="guest" />
           <input type="hidden" name="cmd" value="authenticate" />
+          <input type="hidden" name="mac" value="" />
+          <input type="hidden" name="ip" value="" />
           <input type="hidden" name="url" value="https://ntlogistics.vn" />
 
           <button
@@ -80,10 +108,10 @@ function App() {
               borderRadius: '10px',
               fontWeight: 'bold',
               cursor: isConnecting ? 'not-allowed' : 'pointer',
-              opacity: isConnecting ? 0.8 : 1
+              opacity: isConnecting ? 0.7 : 1
             }}
           >
-            {isConnecting ? "Đang kết nối..." : "Truy cập Wifi"}
+            {buttonText}
           </button>
         </form>
       </motion.div>
