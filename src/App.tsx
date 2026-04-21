@@ -6,19 +6,16 @@ import illustration from './assets/illustration.png';
 import logo from './assets/logo-official.svg';
 
 function App() {
-  // 1. Phân tích URL ngay từ lúc trang bắt đầu tải
+  // Đọc toàn bộ tham số Aruba từ URL
   const urlParams = new URLSearchParams(window.location.search);
-  const debugParams = {
-    post: urlParams.get('post'),
-    mac: urlParams.get('mac'),
-    ip: urlParams.get('ip'),
-    url: urlParams.get('url'),
-    errmsg: urlParams.get('errmsg') || urlParams.get('error')
-  };
+  const clientMac = urlParams.get('mac') || '';
+  const clientIp  = urlParams.get('ip')  || '';
+  const postDomain = urlParams.get('post') || 'captive-2022.aio.cloudauth.net';
+  const errmsg = urlParams.get('errmsg') || urlParams.get('error') || '';
 
-  // 2. Xác định cấu hình đích 
-  const postDomain = debugParams.post || "captive-2022.aio.cloudauth.net";
-  const targetUrl = `https://${postDomain}/cgi-bin/login`;
+  // Vercel serverless function của chúng ta sẽ trả về "Aruba.InstantOn.Acknowledge"
+  // Đây là cơ chế Acknowledgment mode: AP đọc chuỗi này từ server rồi mở mạng
+  const actionUrl = `/api/acknowledge?mac=${encodeURIComponent(clientMac)}&ip=${encodeURIComponent(clientIp)}&post=${encodeURIComponent(postDomain)}`;
 
   return (
     <div className="portal-wrapper">
@@ -57,41 +54,25 @@ function App() {
           Chào mừng bạn đến với mạng Wi-Fi Nhất Tín Logistics
         </p>
 
-        {/* Bảng hệ thống Debug Nâng cao */}
+        {/* Debug Panel */}
         <div style={{ fontSize: '10px', background: '#ffebee', padding: '10px', marginBottom: '15px', borderRadius: '5px', textAlign: 'left', color: '#b71c1c', borderLeft: '3px solid #d91500', wordBreak: 'break-all' }}>
-          <strong>Trạng thái kết nối từ hệ thống:</strong><br/>
-          Mã lỗi trả về (nếu có): <b>{debugParams.errmsg || 'Không có mã lỗi'}</b><br/>
-          MAC: {debugParams.mac || 'Trống'} | IP: {debugParams.ip || 'Trống'}<br/>
-          Domain Post: {debugParams.post || 'Mặc định'}<br/>
+          <strong>Trạng thái kết nối:</strong><br/>
+          {errmsg && <><b>Lỗi: {errmsg}</b><br/></>}
+          MAC: {clientMac || 'Trống'} | IP: {clientIp || 'Trống'}<br/>
+          AP Domain: {postDomain}
         </div>
 
-        {/* FORM THUẦN HTML */}
+        {/* Form gọi Vercel API để trả chuỗi Aruba.InstantOn.Acknowledge */}
         <form 
           id="aruba-login-form" 
-          method="POST" 
-          action={targetUrl}
+          method="GET" 
+          action={actionUrl}
           style={{ width: '100%' }}
         >
-          {/* THÔNG SỐ TỐI GIẢN - KHÔNG GỬI THỪA */}
-          <input type="hidden" name="cmd" value="authenticate" />
-          <input type="hidden" name="user" value="guest" />
-          <input type="hidden" name="password" value="guest" />
-          <input type="hidden" name="mac" value={debugParams.mac || ''} />
-          <input type="hidden" name="ip" value={debugParams.ip || ''} />
-          <input type="hidden" name="url" value="https://ntlogistics.vn" />
-
           <button 
             type="submit" 
             id="btn-connect" 
             className="connect-button" 
-            onClick={(e) => {
-              // Chỉ đổi giao diện nút, không dùng React State để Form gửi đi 100% mượt mà
-              const btn = e.currentTarget;
-              setTimeout(() => {
-                btn.innerText = "Đang kết nối vào hệ thống...";
-                btn.style.opacity = "0.7";
-              }, 10);
-            }}
             style={{ 
               width: '100%', 
               padding: '15px', 
