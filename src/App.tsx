@@ -20,21 +20,25 @@ function App() {
     url: urlParams.get('url')
   };
 
-  const loginAruba = () => {
-    // 1. Tìm tên miền Cloud của Aruba
-    const postDomain = urlParams.get('post') || "captive-2022.aio.cloudauth.net";
-    // Chuyển sang HTTP để tránh lỗi chặn HTTPS khi chưa có mạng
-    const targetUrl = `http://${postDomain}/cgi-bin/login`;
+  const loginAruba = (event: React.FormEvent) => {
+    // 1. NGĂN CHẶN TRANG TỰ ĐỘNG RELOAD
+    event.preventDefault();
 
-    // 2. Hiệu ứng UI
+    // 2. Lấy dữ liệu từ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const postDomain = urlParams.get('post') || "captive-2022.aio.cloudauth.net";
+    // Phải dùng HTTPS để dữ liệu POST không bị mất đi qua khâu Redirect của Server
+    const targetUrl = `https://${postDomain}/cgi-bin/login`;
+
+    // 3. Hiệu ứng UI
     setIsConnecting(true);
     setButtonText("Đang cấp quyền mạng...");
 
     if (formRef.current) {
-      // 3. Thiết lập Action
+      // 4. Thiết lập Action
       formRef.current.action = targetUrl;
       
-      // 4. "VÒNG LẶP THẦN THÁNH": Gom tất cả tham số vào form
+      // 5. "VÒNG LẶP THẦN THÁNH": Gom tất cả tham số vào form
       const existingDynamicInputs = formRef.current.querySelectorAll('.dynamic-input');
       existingDynamicInputs.forEach(el => el.remove());
 
@@ -49,10 +53,19 @@ function App() {
           }
       });
 
-      // Gỡ lỗi: Hiện Alert để người dùng biết target
-      // alert("Đang gửi lệnh tới: " + targetUrl);
+      // 6. Bắt buộc cung cấp tài khoản mặc định để Aruba AIO mở cổng
+      const addHidden = (name: string, val: string) => {
+          const inp = document.createElement('input');
+          inp.type = 'hidden';
+          inp.name = name;
+          inp.value = val;
+          inp.className = 'dynamic-input';
+          formRef.current?.appendChild(inp);
+      };
+      addHidden('user', 'guest');
+      addHidden('password', 'guest');
 
-      // 5. Gửi lệnh đi!
+      // 7. Gửi lệnh đi!
       setTimeout(() => {
         formRef.current?.submit();
       }, 100);
