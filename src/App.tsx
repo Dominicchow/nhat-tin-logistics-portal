@@ -72,21 +72,18 @@ function App() {
           })()}
         </div>
 
-        {/* Dùng window.location.href thay form POST để tránh Mixed Content block */}
+        {/* Gọi Vercel API proxy → proxy POST lên Aruba qua HTTP phía server */}
         <button 
           id="btn-connect" 
           className="connect-button"
           onClick={() => {
-            // Build query string từ tất cả params Aruba gửi
-            const loginParams = new URLSearchParams();
-            loginParams.set('cmd', 'login');
+            // Đưa TẤT CẢ params vào URL để API proxy xử lý
+            const apiParams = new URLSearchParams();
             urlParams.forEach((v, k) => {
-              if (!['post', 'cmd', 'errmsg', 'error'].includes(k)) {
-                loginParams.set(k, v);
-              }
+              apiParams.set(k, v);
             });
-            // Điều hướng sang HTTP (navigation, không phải fetch → không bị Mixed Content block)
-            window.location.href = `http://${postDomain}/cgi-bin/login?${loginParams.toString()}`;
+            // HTTPS→HTTPS: không Mixed Content. Vercel server sẽ POST HTTP lên Aruba
+            window.location.href = `/api/aruba-login?${apiParams.toString()}`;
           }}
           style={{ 
             width: '100%', 
