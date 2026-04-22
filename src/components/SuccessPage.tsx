@@ -9,7 +9,7 @@ interface SuccessPageProps {
 
 const SuccessPage: React.FC<SuccessPageProps> = () => {
     // Tự động chuyển hướng đã bị gỡ bỏ theo yêu cầu của người dùng
-    
+
     useEffect(() => {
         // Tự động chuyển hướng đã bị gỡ bỏ.
         // Chỉ giữ lại hiệu ứng hoặc các logic khác nếu cần.
@@ -71,7 +71,7 @@ const SuccessPage: React.FC<SuccessPageProps> = () => {
                     marginBottom: '32px'
                 }}
             >
-                Chào mừng bạn đến với mạng Wi-Fi<br/> 
+                Chào mừng bạn đến với mạng Wi-Fi<br />
                 <strong>Nhất Tín Logistics</strong>
             </motion.p>
 
@@ -102,10 +102,10 @@ const SuccessPage: React.FC<SuccessPageProps> = () => {
             </motion.div>
 
             <p style={{
-                    fontSize: '14px',
-                    color: '#94a3b8',
-                    marginBottom: '40px'
-                }}>
+                fontSize: '14px',
+                color: '#94a3b8',
+                marginBottom: '40px'
+            }}>
                 Bạn đã có thể sử dụng Internet.
             </p>
 
@@ -128,13 +128,13 @@ const SuccessPage: React.FC<SuccessPageProps> = () => {
                 }}
             >
                 <Globe size={20} />
-                Vào ntlogistics.vn
+                Truy cập Wifi
                 <ArrowRight size={18} />
             </motion.a>
 
             {/* Iframe ẩn gửi chuỗi ma thuật Aruba.InstantOn.Acknowledge cho AP */}
-            <iframe 
-                src="/accept.html" 
+            <iframe
+                src="/accept.html"
                 style={{ display: 'none', width: 0, height: 0, border: 'none' }}
                 title="aruba-ack"
             />
