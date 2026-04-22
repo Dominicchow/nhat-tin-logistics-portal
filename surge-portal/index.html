@@ -164,6 +164,41 @@
       font-weight: 600;
     }
 
+    .redirect-box {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .redirect-label {
+      font-size: 12px;
+      color: #888;
+      text-align: center;
+    }
+
+    .redirect-label span {
+      font-weight: 700;
+      color: var(--brand-red);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: #f0f0f0;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--brand-red);
+      border-radius: 99px;
+      transition: width linear;
+    }
+
     .visit-button {
       width: 100%;
       background: var(--brand-red);
@@ -177,7 +212,6 @@
       text-decoration: none;
       display: block;
       transition: opacity 0.2s;
-      margin-top: 4px;
     }
 
     .visit-button:active { opacity: 0.8; }
@@ -250,13 +284,47 @@
         </div>
       </div>
 
-      <a href="https://ntlogistics.vn" class="visit-button">
-        Khám phá Nhất Tín Logistics →
-      </a>
+      <div class="redirect-box">
+        <div class="redirect-label">Tự động chuyển trang sau <span id="countdown">3</span> giây...</div>
+        <div class="progress-track">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <a href="https://ntlogistics.vn" class="visit-button" id="visit-btn">
+          Vào ngay ntlogistics.vn →
+        </a>
+      </div>
     </div>
 
     <div class="hotline-footer">Nhất Tín Logistics — Vận chuyển tin cậy</div>
   </div>
+
+  <script>
+    var DURATION = 3; // giây
+    var remaining = DURATION;
+    var progressBar = document.getElementById('progress-bar');
+    var countdownEl = document.getElementById('countdown');
+    var TARGET_URL = 'https://ntlogistics.vn';
+
+    // Bắt đầu progress bar animation
+    // Dùng rAF để đảm bảo transition chạy ngay sau khi DOM render
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        progressBar.style.transition = 'width ' + DURATION + 's linear';
+        progressBar.style.width = '100%';
+      });
+    });
+
+    // Đếm ngược và redirect
+    var interval = setInterval(function() {
+      remaining -= 1;
+      if (remaining <= 0) {
+        clearInterval(interval);
+        window.location.href = TARGET_URL;
+      } else {
+        countdownEl.textContent = remaining;
+      }
+    }, 1000);
+  </script>
 
 </body>
 </html>
