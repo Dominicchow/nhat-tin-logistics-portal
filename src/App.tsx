@@ -1,6 +1,7 @@
-
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Wifi } from 'lucide-react';
+import SuccessPage from './components/SuccessPage';
 import './index.css';
 import illustration from './assets/illustration.png';
 import logo from './assets/logo-official.svg';
@@ -8,19 +9,29 @@ import logo from './assets/logo-official.svg';
 function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const errmsg     = urlParams.get('errmsg') || urlParams.get('error') || '';
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  // "Vòng lặp thần thánh" v2: Relay TẤT CẢ tham số Aruba gửi về, dùng cmd=login
-  const hiddenInputs: any[] = [];
-  urlParams.forEach((value, key) => {
-    // Bỏ qua: post (đã dùng làm action URL), cmd (ta tự set), và các error param
-    const skip = ['post', 'cmd', 'errmsg', 'error'];
-    if (!skip.includes(key)) {
-      hiddenInputs.push(<input key={key} type="hidden" name={key} value={value} />);
-    }
-  });
-
-  // Hiện toàn bộ URL để debug - tìm params ẩn
-  const fullUrl = window.location.href;
+  function handleAccept() {
+    setIsConnecting(true);
+    
+    // Bước 1: Hiện thanh loading giả lập
+    setTimeout(() => {
+      setIsConnecting(false);
+      setShowSuccess(true); // Hiện diện giao diện SuccessPage (UI React)
+      
+      // Bước 2: Sau khi người dùng đã nhìn thấy Success UI, 
+      // ta mới thực hiện redirect sang HTTP để Aruba "ngửi" thấy mã ACK.
+      setTimeout(() => {
+        const params = new URLSearchParams();
+        urlParams.forEach((v, k) => params.set(k, v));
+        
+        // ÉP BUỘC dùng HTTP (không phải HTTPS) để Aruba có thể đọc được payload
+        const baseUrl = window.location.host;
+        window.location.href = `http://${baseUrl}/accept.html?${params.toString()}`;
+      }, 1500);
+    }, 1000);
+  }
 
   return (
     <div className="portal-wrapper">
@@ -59,42 +70,50 @@ function App() {
           Chào mừng bạn đến với mạng Wi-Fi Nhất Tín Logistics
         </p>
 
-        {/* Debug: Hiện toàn bộ URL để tìm tất cả tham số Aruba gửi về */}
-        <div style={{ fontSize: '9px', background: '#ffebee', padding: '8px', marginBottom: '12px', borderRadius: '5px', textAlign: 'left', color: '#b71c1c', borderLeft: '3px solid #d91500', wordBreak: 'break-all' }}>
-          <strong>Debug URL:</strong><br/>
-          {fullUrl}<br/>
-          {errmsg && <><strong>Lỗi: {errmsg}</strong><br/></>}
-          <strong>Tất cả Params:</strong> {(() => {
-            const parts: string[] = [];
-            urlParams.forEach((v, k) => parts.push(`${k}=${v}`));
-            return parts.join(' | ');
-          })()}
-        </div>
+        {errmsg && (
+          <p style={{ color: '#d91500', fontSize: '13px', marginBottom: '8px' }}>
+            ⚠️ {errmsg}
+          </p>
+        )}
 
-        {/* Form POST sang API của mình (HTTPS→HTTPS, không Mixed Content) */}
-        {/* API sẽ 307 redirect → browser tự POST sang Aruba HTTP */}
-        <form method="POST" action="/api/aruba-login" style={{ width: '100%' }}>
-          <input type="hidden" name="cmd" value="login" />
-          {/* Divine loop: relay tất cả params Aruba gửi */}
-          {hiddenInputs}
-          <button 
-            type="submit"
-            id="btn-connect" 
-            className="connect-button"
-            style={{ 
-              width: '100%', 
-              padding: '15px', 
-              background: '#e31a1a', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '10px', 
-              fontWeight: 'bold', 
-              cursor: 'pointer'
-            }}
-          >
-            Truy cập Wifi
-          </button>
-        </form>
+        {/* Nút Accept → navigate sang HTTP Surge.sh → AP đọc Aruba.InstantOn.Acknowledge */}
+        <button
+          id="btn-connect"
+          className="connect-button"
+          onClick={handleAccept}
+          disabled={isConnecting}
+          style={{
+            width: '100%',
+            padding: '15px',
+            background: isConnecting ? '#ccc' : '#e31a1a',
+            color: 'white',
+            border: 'none',
+            borderRadius: '10px',
+            fontWeight: 'bold',
+            cursor: isConnecting ? 'default' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '10px'
+          }}
+        >
+          {isConnecting ? (
+            <>
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  border: '3px solid rgba(255,255,255,0.3)',
+                  borderTop: '3px solid white',
+                  borderRadius: '50%'
+                }}
+              />
+              Đang kết nối...
+            </>
+          ) : 'Truy cập Wifi'}
+        </button>
       </motion.div>
 
       <motion.div 
@@ -105,6 +124,20 @@ function App() {
       >
         Hotline: 1900 63 6688
       </motion.div>
+
+      {/* Hiển thị SuccessPage đè lên khi đã kết nối */}
+      {showSuccess && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 9999
+        }}>
+          <SuccessPage />
+        </div>
+      )}
     </div>
   );
 }
