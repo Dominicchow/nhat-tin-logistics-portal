@@ -16,6 +16,25 @@
   border-radius: 8px;
 }
 
+.overlay-text {
+  position: absolute;
+  bottom: 40px;
+  background: rgba(217, 21, 0, 0.9); /* Nhất Tín Red */
+  color: white;
+  padding: 12px 24px;
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.9; }
+}
+
 /* Ensure picture source also behaves well */
 picture {
   display: flex;
