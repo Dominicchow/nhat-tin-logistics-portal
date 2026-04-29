@@ -9,8 +9,6 @@
 
     :root {
       --brand-red: #d91500;
-      --text-black: #000000;
-      --text-white: #ffffff;
       --card-radius: 30px;
       --button-radius: 14px;
     }
@@ -34,12 +32,11 @@
     body::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      inset: 0;
       background-image: url('./assets/bg-overlay.png');
       background-size: cover;
       background-position: center;
       opacity: 0.32;
-      mix-blend-mode: normal;
       pointer-events: none;
     }
 
@@ -56,17 +53,12 @@
     }
 
     .logo-container {
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       animation: slideDown 0.6s ease-out;
     }
 
     .illustration-img {
       width: 280px;
       height: auto;
-      object-fit: contain;
       animation: scaleUp 0.8s ease-out 0.2s both;
     }
 
@@ -74,103 +66,55 @@
       background: white;
       width: 100%;
       border-radius: var(--card-radius);
-      padding: 32px 24px 28px 24px;
+      padding: 32px 24px 28px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
       animation: slideUp 0.6s ease-out 0.4s both;
-      gap: 12px;
+      gap: 16px;
     }
 
-    .success-icon {
-      width: 62px;
-      height: 62px;
+    .wifi-icon {
+      background: var(--brand-red);
+      width: 62px; height: 62px;
       border-radius: 50%;
-      background: #16a34a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 4px;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    .success-icon svg {
-      width: 32px; height: 32px; stroke: white; stroke-width: 2.5; fill: none;
-      stroke-linecap: round; stroke-linejoin: round;
+    .wifi-icon svg {
+      width: 32px; height: 32px; stroke: white; stroke-width: 2.5;
+      fill: none; stroke-linecap: round; stroke-linejoin: round;
     }
 
     .portal-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--text-black);
+      font-size: 20px; font-weight: 700; color: #000;
     }
 
     .portal-subtitle {
-      font-size: 13px;
-      font-weight: 400;
-      color: #555;
-      line-height: 1.6;
-      padding: 0 8px;
+      font-size: 13px; font-weight: 400;
+      color: #555; line-height: 1.6; padding: 0 8px;
     }
 
-    .redirect-box {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .redirect-label {
-      font-size: 12px;
-      color: #888;
-      text-align: center;
-    }
-
-    .redirect-label span {
-      font-weight: 700;
-      color: var(--brand-red);
-    }
-
-    .progress-track {
-      width: 100%;
-      height: 6px;
-      background: #f0f0f0;
-      border-radius: 99px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: var(--brand-red);
-      border-radius: 99px;
-      transition: width linear;
-    }
-
-    .visit-button {
+    .connect-button {
       width: 100%;
       background: var(--brand-red);
       color: white;
       border: none;
-      padding: 18px;
+      padding: 20px;
       border-radius: var(--button-radius);
-      font-size: 15px;
-      font-weight: 600;
+      font-size: 16px; font-weight: 600;
       cursor: pointer;
-      text-decoration: none;
-      display: block;
-      transition: opacity 0.2s;
+      transition: opacity 0.2s, transform 0.1s;
+      margin-top: 4px;
     }
 
-    .visit-button:active { opacity: 0.8; }
+    .connect-button:active { opacity: 0.8; transform: scale(0.98); }
+    .connect-button:disabled { opacity: 0.65; cursor: default; }
 
     .hotline-footer {
-      color: white;
-      font-size: 14px;
-      font-weight: 400;
-      margin-top: 4px;
+      color: white; font-size: 14px;
       text-shadow: 0 1px 4px rgba(0,0,0,0.3);
       animation: fadeIn 0.8s ease-out 0.8s both;
     }
@@ -180,71 +124,56 @@
       .portal-wrapper { gap: 12px; }
     }
 
-    /* Animations */
     @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes scaleUp { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
+    @keyframes scaleUp   { from { opacity: 0; transform: scale(0.9); }       to { opacity: 1; transform: scale(1); } }
+    @keyframes slideUp   { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn    { from { opacity: 0; }                               to { opacity: 1; } }
   </style>
 </head>
 <body>
-
   <div class="portal-wrapper">
+
     <header class="logo-container">
-      <img src="./assets/logo-official.svg" alt="Nhất Tín Logistics Logo" style="height: 38px; width: auto;" />
+      <img src="./assets/logo-official.svg" alt="Nhất Tín Logistics" style="height:38px;width:auto;" />
     </header>
 
-    <img src="./assets/illustration.png" alt="Logistics Illustration" class="illustration-img" />
+    <img src="./assets/illustration.png" alt="Illustration" class="illustration-img" />
 
     <div class="portal-card">
-      <div class="success-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <polyline points="20 6 9 17 4 12"></polyline>
+      <div class="wifi-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+          <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+          <line x1="12" y1="20" x2="12.01" y2="20"/>
         </svg>
       </div>
 
-      <h1 class="portal-title">Kết nối thành công!</h1>
-      <p class="portal-subtitle">Chào mừng bạn đến với Wi-Fi Nhất Tín Logistics. Chúc bạn có trải nghiệm kết nối tuyệt vời.</p>
+      <h1 class="portal-title">Truy cập Mạng Wi-Fi</h1>
+      <p class="portal-subtitle">Chào mừng bạn đến với Wi-Fi Nhất Tín Logistics.<br>Bấm nút bên dưới để kết nối.</p>
 
-      <div class="redirect-box">
-        <div class="redirect-label">Tự động chuyển trang sau <span id="countdown">7</span> giây...</div>
-        <div class="progress-track">
-          <div class="progress-bar" id="progress-bar"></div>
-        </div>
-      </div>
+      <button id="btn-connect" class="connect-button" onclick="doConnect()">
+        Truy cập Wifi
+      </button>
     </div>
 
     <div class="hotline-footer">Hotline: 1900 63 6688</div>
   </div>
 
   <script>
-    var DURATION = 7; // giây
-    var remaining = DURATION;
-    var progressBar = document.getElementById('progress-bar');
-    var countdownEl = document.getElementById('countdown');
-    var TARGET_URL = 'https://ntlogistics.vn';
+    function doConnect() {
+      var btn = document.getElementById('btn-connect');
+      btn.textContent = '⏳ Đang kết nối...';
+      btn.disabled = true;
 
-    // Bắt đầu progress bar animation
-    // Dùng rAF để đảm bảo transition chạy ngay sau khi DOM render
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() {
-        progressBar.style.transition = 'width ' + DURATION + 's linear';
-        progressBar.style.width = '100%';
-      });
-    });
-
-    // Đếm ngược và redirect
-    var interval = setInterval(function() {
-      remaining -= 1;
-      if (remaining <= 0) {
-        clearInterval(interval);
-        window.location.href = TARGET_URL;
-      } else {
-        countdownEl.textContent = remaining;
-      }
-    }, 1000);
+      // Chuyển trang accept.html qua HTTP để Aruba đọc được magic string
+      // QUAN TRỌNG: phải dùng http:// (không phải https://)
+      // Surge.sh hỗ trợ HTTP không cần redirect → Aruba đọc được response body
+      setTimeout(function() {
+        var params = window.location.search;
+        window.location.href = 'http://nhat-tin-portal.surge.sh/accept.html' + params;
+      }, 400);
+    }
   </script>
-
 </body>
 </html>
