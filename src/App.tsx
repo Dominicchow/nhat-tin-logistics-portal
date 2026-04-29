@@ -23,10 +23,6 @@ function App() {
         {/* Mobile: 1080x1920 */}
         <img src="/gifs/mobile.gif" alt="Wifi GIF" className="fullscreen-gif" />
       </picture>
-      
-      <div className="overlay-text">
-        {isConnecting ? '⏳ Đang kết nối...' : 'Chạm để truy cập Wi-Fi'}
-      </div>
     </div>
   )
 }
