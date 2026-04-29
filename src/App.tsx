@@ -1,20 +1,8 @@
-import { useState } from 'react'
 import './App.css'
 
 function App() {
-  const [isConnecting, setIsConnecting] = useState(false)
-
-  const handleConnect = () => {
-    setIsConnecting(true)
-    setTimeout(() => {
-      const params = window.location.search
-      // Chuyển sang accept.html để Aruba thực hiện xác thực (Acknowledge)
-      window.location.href = '/accept.html' + params
-    }, 400)
-  }
-
   return (
-    <div className="container" onClick={handleConnect} style={{ cursor: 'pointer' }}>
+    <div className="container">
       <picture>
         {/* Desktop: 1920x1080 */}
         <source media="(min-width: 1025px)" srcSet="/gifs/desktop.gif" />
